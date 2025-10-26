@@ -64,9 +64,8 @@ const News = ({ toggleTheme, mode }) => {
 
   return (
     <div>
-      <Navbar current="news" toggleTheme={toggleTheme} />
 
-      <div style={{ padding: "20px", minHeight: "100px" }}>
+      <div style={{minHeight: "100px" }}>
         <h2 style={{ marginBottom: "20px", color: isDark ? "#80bfff" : "#00008B"}}>
           News
         </h2>
