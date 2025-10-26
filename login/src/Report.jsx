@@ -1,108 +1,125 @@
-import React from 'react'
-import Navbar from './Navbar'
-import { shipments } from "./ShipmentData"; 
-import { DarkMode } from '@mui/icons-material';
-import jsPDF from "jspdf";
-import "jspdf-autotable";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
+import React, { useState, useMemo } from "react";
+import {
+  Box,
+  Typography,
+  MenuItem,
+  Select,
+  Grid,
+  Card,
+  CardContent,
+  LinearProgress,
+} from "@mui/material";
+import { shipments } from "./ShipmentData";
+import Navbar from "./Navbar";
 import ExportButtons from "./ExportButtons";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  LineChart,
+  Line,
+  ResponsiveContainer,
+} from "recharts";
 
-export const Report = ({toggleTheme, mode}) => {
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+
+export const Report = ({ toggleTheme, mode }) => {
   const isDark = mode === "dark";
+  const [period, setPeriod] = useState("This Month");
+  const [shipmentType, setShipmentType] = useState("All Shipments");
+
   const today = new Date();
-  const startOfWeek = new Date(today);
-  startOfWeek.setDate(today.getDate() - today.getDay()); 
 
-  const endOfWeek = new Date(today);
-  endOfWeek.setDate(today.getDate() + (6 - today.getDay())); 
-
-  const week_delivery = shipments.filter((s) => {
-    const deliveryDate = new Date(s.time);
-    return !isNaN(deliveryDate) && deliveryDate >= startOfWeek && deliveryDate <= endOfWeek;
-  });
-  
-  const currentMonth = today.getMonth(); 
-  const currentYear = today.getFullYear();
-  const month_delivery = shipments.filter((s) => {
-    const deliveryDate = new Date(s.time);
-    return !isNaN(deliveryDate) &&
-     deliveryDate.getMonth() == currentMonth && 
-     deliveryDate.getFullYear() == currentYear;
-  });
-
+  // Utility functions
   const getStatus = (deliveryTime) => {
-  const today = new Date();
-  const deliveryDate = new Date(deliveryTime);
+    const deliveryDate = new Date(deliveryTime);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    deliveryDate.setHours(0, 0, 0, 0);
 
-  today.setHours(0, 0, 0, 0);
-  deliveryDate.setHours(0, 0, 0, 0);
-
-  if (deliveryDate < today) return "Overdue";
-  if (deliveryDate > today) return "In Transit";
-  return "Delivered";
-};
-
-const overdue_shipments = shipments.filter((s) => {
-  const deliveryDate = new Date(s.time);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  deliveryDate.setHours(0, 0, 0, 0);
-  return !isNaN(deliveryDate) && deliveryDate < today;
-});
-
-const exportPDF = () => {
-  const doc = new jsPDF();
-  doc.setFontSize(16);
-  doc.text("Shipment Report", 14, 20);
-
-  const formatData = (title, data) => {
-    doc.text(title, 14, doc.lastAutoTable?.finalY + 10 || 30);
-    doc.autoTable({
-      startY: doc.lastAutoTable?.finalY + 15 || 35,
-      head: [["ID", "Delivery Date", "Status"]],
-      body: data.map((s) => [s.id, s.time, getStatus(s.time)]),
-    });
+    if (deliveryDate < now) return "Overdue";
+    if (deliveryDate > now) return "In Transit";
+    return "Delivered";
   };
 
-  formatData("Overdue Shipments", overdue_shipments);
-  formatData("This Month's Deliveries", month_delivery);
-  formatData("This Week's Deliveries", week_delivery);
+  // === Filtered Data Sets ===
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday
+  const endOfWeek = new Date(today);
+  endOfWeek.setDate(today.getDate() + (6 - today.getDay())); // Saturday
 
-  doc.save("shipment-report.pdf");
-};
-
-const exportExcel = () => {
-  const sheetData = [];
-
-  const pushSection = (title, data) => {
-    sheetData.push([title]);
-    sheetData.push(["ID", "Delivery Date", "Status"]);
-    data.forEach((s) => {
-      sheetData.push([s.id, s.time, getStatus(s.time)]);
-    });
-    sheetData.push([]);
-  };
-
-  pushSection("Overdue Shipments", overdue_shipments);
-  pushSection("This Month's Deliveries", month_delivery);
-  pushSection("This Week's Deliveries", week_delivery);
-
-  const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
-
-  const excelBuffer = XLSX.write(workbook, {
-    bookType: "xlsx",
-    type: "array",
+  const weekDeliveries = shipments.filter((s) => {
+    const date = new Date(s.time);
+    return date >= startOfWeek && date <= endOfWeek;
   });
 
-  const blob = new Blob([excelBuffer], {
-    type: "application/octet-stream",
+  const monthDeliveries = shipments.filter((s) => {
+    const date = new Date(s.time);
+    return (
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
   });
 
-  saveAs(blob, "shipment-report.xlsx");
-  };
+  const overdueShipments = shipments.filter(
+    (s) => new Date(s.time) < new Date()
+  );
+
+  // === Chart Data ===
+  const weeklyData = useMemo(() => {
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const counts = days.map((d, i) => {
+      const dayDate = new Date(startOfWeek);
+      dayDate.setDate(startOfWeek.getDate() + i);
+      const count = shipments.filter((s) => {
+        const delivery = new Date(s.time);
+        return (
+          delivery.getFullYear() === dayDate.getFullYear() &&
+          delivery.getMonth() === dayDate.getMonth() &&
+          delivery.getDate() === dayDate.getDate()
+        );
+      }).length;
+      return { day: d, deliveries: count };
+    });
+    return counts;
+  }, [shipments]);
+
+  const monthlyData = useMemo(() => {
+    const months = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ];
+    return months.map((m, i) => {
+      const count = shipments.filter((s) => {
+        const d = new Date(s.time);
+        return d.getMonth() === i;
+      }).length;
+      return { month: m, deliveries: count };
+    });
+  }, [shipments]);
+
+  // === Combined data for export ===
+  const combinedShipments = [
+    ...overdueShipments.map((s) => ({
+      ...s,
+      status: getStatus(s.time),
+      category: "Overdue",
+    })),
+    ...monthDeliveries.map((s) => ({
+      ...s,
+      status: getStatus(s.time),
+      category: "This Month",
+    })),
+    ...weekDeliveries.map((s) => ({
+      ...s,
+      status: getStatus(s.time),
+      category: "This Week",
+    })),
+  ];
 
   const reportColumns = [
     { label: "Ship ID", field: "id" },
@@ -111,129 +128,259 @@ const exportExcel = () => {
     { label: "Category", field: "category" },
   ];
 
-  const combinedShipments = [
-    ...overdue_shipments.map(s => ({ ...s, status: getStatus(s.time), category: "Overdue" })),
-    ...month_delivery.map(s => ({ ...s, status: getStatus(s.time), category: "This Month" })),
-    ...week_delivery.map(s => ({ ...s, status: getStatus(s.time), category: "This Week" })),
-  ];
-
   return (
-    <div style={{
-      paddingLeft: "50px",
-      paddingTop: "10px",
-      overflowY: "auto",
-      marginTop: "150px",
-      marginLeft: "40px",
-      marginBottom: "50px",
-      
-    }}><Navbar current="report" toggleTheme={toggleTheme} mode={mode}/>
 
-    <div style={{ display: "flex", marginLeft: "-10px"}}>
-      <ExportButtons data={combinedShipments} columns={reportColumns} fileName="Report" />
-     
-    </div>
     
+    <Box
+      sx={{
+        paddingLeft: "20px",
+        paddingTop: "20px",
+        marginLeft: "10px",
+        marginBottom: "50px",
+      }}
+    >
+      <h1 style={{marginBottom: 30}}>Shipment Reports</h1>
 
-    <h2 style={{
-        fontSize: "20px",
-        color: isDark ? "#80bfff" : "#00008B",
-        marginTop: "20px",
+      {/* Filters + Export */}
+      <Box sx={{ display: "flex", alignItems: "center", mb: 3, gap: 5, marginBottom: 5, }}>
         
-      }}>Overdue shipments</h2>
-      <h3 style={{
-        fontSize: "15px",
-        color: isDark? "white" : "#333",
-        paddingTop: "10px",
-        paddingLeft: "10px",
         
-      }}>Shipments: {overdue_shipments.length}</h3>
-      <ul style={{
-        paddingTop: "10px", 
-        paddingLeft: "25px", 
-        color: isDark ? "#f15f48ff" : "#d40000ff",
-        
-        }}>
-        {overdue_shipments.map((s) => (
-          <li key={s.id}>
-            Ship ID: {s.id} — Delivery Date: {s.time}   Status: {getStatus(s.time)}
-          </li>
-        ))}
-      </ul>
+        <Select
+          value={period}
+          onChange={(e) => setPeriod(e.target.value)}
+          sx={{
+            borderRadius: "12px",
+            bgcolor: "white",
+            minWidth: 160,
+            fontWeight: 500,
+          }}
+        >
+          <MenuItem value="This Week">This Week</MenuItem>
+          <MenuItem value="This Month">This Month</MenuItem>
+          <MenuItem value="Last Month">Last Month</MenuItem>
+          <MenuItem value="Last 3 Months">Last 3 Months</MenuItem>
+        </Select>
 
-    <h2 style={{
-        fontSize: "20px",
-        color: isDark ? "#80bfff" : "#00008B",
-        marginTop: "30px"
-        
-      }}>This month's deliveries</h2>
-      <h3 style={{
-        fontSize: "15px",
-        color: isDark? "white" : "#333",
-        paddingTop: "10px",
-        paddingLeft: "10px"
-      }}>Shipments: {month_delivery.length}</h3>
-      <ul style={{ paddingTop: "10px", paddingLeft: "25px" }}>
-  {month_delivery.map((s) => {
-    const status = getStatus(s.time);
-    const isOverdue = status === "Overdue";
+        <Select
+          value={shipmentType}
+          onChange={(e) => setShipmentType(e.target.value)}
+          sx={{
+            borderRadius: "12px",
+            bgcolor: "white",
+            minWidth: 160,
+            fontWeight: 500,
+          }}
+        >
+          <MenuItem value="All Shipments">All Shipments</MenuItem>
+          <MenuItem value="Local">Local</MenuItem>
+          <MenuItem value="International">International</MenuItem>
+        </Select>
 
-    return (
-      <li
-        key={s.id}
-        style={{
-          color: isOverdue
-            ? isDark
-              ? "#f15f48ff"
-              :  "#d40000ff"
-            : isDark
-            ? "white"
-            : "black",
+        <Box sx={{ marginLeft: "auto" }}>
+          <ExportButtons
+            data={combinedShipments}
+            columns={reportColumns}
+            fileName="Shipment Report"
+          />
+        </Box>
+      </Box>
+
+      {/* Summary Cards */}
+
+        <Grid container spacing={4} sx={{ mb: 5 }}>
+  {/* Card 1 */}
+  <Grid item xs={12} md={4}>
+    <Card
+      sx={{
+        borderLeft: "6px solid #d40000ff",
+        borderRadius: 3,
+        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+        position: "relative",
+        p: 2,
+        height: 200,
+        width: 360
+      }}
+    >
+      {/* Icon circle top right */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: 16,
+          right: 16,
+          bgcolor: "#ffe6e6",
+          borderRadius: "50%",
+          width: 52,
+          height: 32,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        Ship ID: {s.id} — Delivery Date: {s.time} — Status: {status}
-      </li>
-    );
-  })}
-</ul>
+        {/* Replace with your calendar icon or similar */}
+        <CalendarTodayIcon sx={{ color: "#d40000ff" }} />
+      </Box>
 
+      <Typography fontWeight="bold" sx={{ color: "#d40000ff" }}>
+        Requires immediate attention
+      </Typography>
+      <Typography variant="h3" color="#d40000ff" sx={{ mt: 1, fontWeight: "bold" }}>
+        {overdueShipments.length}
+      </Typography>
+      <Typography color="text.secondary" variant="body2">
+        Overdue shipments
+      </Typography>
+    </Card>
+  </Grid>
 
-      <h2 style={{
-        fontSize: "20px",
-        color: isDark ? "#80bfff" : "#00008B",
-        marginTop: "30px"
-      }}>This week's deliveries</h2>
-      <h3 style={{
-        fontSize: "15px",
-        color: isDark? "white" : "#333",
-        paddingTop: "10px",
-        paddingLeft: "10px",
-        
-      }}>Shipments: {week_delivery.length}</h3>
-      <ul style={{ paddingTop: "10px", paddingLeft: "25px" }}>
-    {week_delivery.map((s) => {
-    const status = getStatus(s.time);
-    const isOverdue = status === "Overdue";
-
-    return (
-      <li
-        key={s.id}
-        style={{
-          color: isOverdue
-            ? isDark
-              ? "#f15f48ff"
-              :  "#d40000ff"
-            : isDark
-            ? "white"
-            : "black",
+  {/* Card 2 */}
+  <Grid item xs={12} md={4}>
+    <Card
+      sx={{
+        borderLeft: "6px solid #007bff",
+        borderRadius: 3,
+        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+        position: "relative",
+        p: 2,
+        height: 200,
+        width: 360
+      }}
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: 16,
+          right: 16,
+          bgcolor: "#cce5ff",
+          borderRadius: "50%",
+          width: 32,
+          height: 32,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        Ship ID: {s.id} — Delivery Date: {s.time} — Status: {status}
-      </li>
-    );
-  })}
-</ul>
+        <TrendingUpIcon sx={{ color: "#007bff" }} />
+      </Box>
 
-      
-    </div>
-  )
-}
+      <Typography fontWeight="bold" sx={{ color: "#007bff" }}>
+        This Month's Deliveries
+      </Typography>
+      <Typography variant="h3" color="#007bff" sx={{ mt: 1, fontWeight: "bold" }}>
+        {monthDeliveries.length}
+      </Typography>
+
+      <LinearProgress
+        variant="determinate"
+        value={monthDeliveries.length * 10}
+        sx={{
+          height: 8,
+          borderRadius: 5,
+          mt: 1.5,
+          bgcolor: "#e5e7eb",
+          "& .MuiLinearProgress-bar": { bgcolor: "#007bff" },
+        }}
+      />
+      <Typography variant="body2" sx={{ mt: 1, color: "text.secondary" }}>
+        {monthDeliveries.length * 10}% of monthly target
+      </Typography>
+    </Card>
+  </Grid>
+
+  {/* Card 3 */}
+  <Grid item xs={12} md={4}>
+    <Card
+      sx={{
+        borderLeft: "6px solid #ffcc00",
+        borderRadius: 3,
+        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+        position: "relative",
+        p: 2,
+        height: 200,
+        width: 360
+      }}
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: 16,
+          right: 16,
+          bgcolor: "#fff7cc",
+          borderRadius: "50%",
+          width: 32,
+          height: 32,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <TrendingUpIcon sx={{ color: "#b58900" }} />
+      </Box>
+
+      <Typography fontWeight="bold" sx={{ color: "#b58900" }}>
+        This Week's Deliveries
+      </Typography>
+      <Typography variant="h3" color="#b58900" sx={{ mt: 1, fontWeight: "bold" }}>
+        {weekDeliveries.length}
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        {weekDeliveries.filter(d => d.date === today).length} deliveries today
+      </Typography>
+    </Card>
+  </Grid>
+  <Grid container spacing={4}>
+  {/* Weekly Shipment Activity (Bar Chart) */}
+  <Grid item xs={12} md={6}>
+    <Card sx={{ borderRadius: 3, p: 2, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", height: 400,
+        width: 510}}>
+      <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
+        Weekly Shipment Activity
+      </Typography>
+      <ResponsiveContainer width="100%" height={250}>
+        <BarChart data={weeklyData}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <XAxis dataKey="day" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="deliveries" fill="#ffcc00" radius={[6, 6, 0, 0]} barSize={40} />
+        </BarChart>
+      </ResponsiveContainer>
+    </Card>
+  </Grid>
+
+  {/* Monthly Delivery Trends (Line Chart) */}
+  <Grid item xs={12} md={6}>
+    <Card sx={{ borderRadius: 3, p: 2, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", height: 400,
+        width: 510 }}>
+      <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
+        Monthly Delivery Trends
+      </Typography>
+      <ResponsiveContainer width="100%" height={250}>
+        <LineChart data={monthlyData}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <XAxis dataKey="month" />
+          <YAxis />
+          <Tooltip />
+          <Line
+          type="monotone"
+          dataKey="deliveries"
+          stroke="#0b1526"             // dark navy line
+          strokeWidth={2}
+          dot={{ r: 4, fill: "#fff", stroke: "#0b1526", strokeWidth: 2 }} // hollow white circles with dark border
+          activeDot={{ r: 6, fill: "#fff", stroke: "#0b1526", strokeWidth: 2 }}
+          isAnimationActive={true}
+          animationDuration={800}
+        />
+
+        </LineChart>
+      </ResponsiveContainer>
+    </Card>
+  </Grid>
+</Grid>
+
+</Grid>
+
+    </Box>
+  );
+};
+
+export default Report;
