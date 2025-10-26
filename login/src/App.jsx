@@ -15,26 +15,25 @@ import Shipments from "./Shipments"
 const App = () => {
   const [error, setError] = useState("");
 
-  // Theme state
+
   const [mode, setMode] = useState("light");
 
-  // Load saved theme from localStorage on first render
+
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
     setMode(savedTheme);
   }, []);
 
-  // Save theme to localStorage when it changes
+
   useEffect(() => {
     localStorage.setItem("theme", mode);
   }, [mode]);
 
-  // Toggle function
+
   const toggleTheme = () => {
     setMode((prev) => (prev === "light" ? "dark" : "light"));
   };
 
-  // MUI theme object
   const theme = useMemo(
     () =>
       createTheme({
@@ -51,12 +50,12 @@ const App = () => {
       <div className={mode === "dark" ? "dark-mode" : ""}>
         <Router>
           <Routes>
-          {/* Public routes */}
+
           <Route path="/" element={<Login error={error} setError={setError} />} />
           <Route path="/login" element={<Login error={error} setError={setError} />} />
           <Route path="/signup" element={<Signup />} />
 
-          {/* Protected routes with Navbar */}
+
           <Route
             path="/dashboard"
             element={
