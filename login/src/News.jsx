@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 
 const RSS_FEEDS = [
-  "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.atom", // Earthquakes
-  "https://www.nhc.noaa.gov/rss.xml", // Hurricanes/Storms
+  "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.atom", 
+  "https://www.nhc.noaa.gov/rss.xml", 
 ];
 
 const News = ({ toggleTheme, mode }) => {
@@ -27,7 +27,7 @@ const News = ({ toggleTheme, mode }) => {
         for (let feed of RSS_FEEDS) {
           const data = await fetchRSS(feed);
           if (data.items && data.items.length > 0) {
-            // Map to simplified structure
+      
             const mapped = data.items.map((item) => ({
               title: item.title,
               link: item.link,
@@ -43,7 +43,7 @@ const News = ({ toggleTheme, mode }) => {
           throw new Error("No disaster articles available right now.");
         }
 
-        // Sort by most recent
+     
         allArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
         setNews(allArticles);
@@ -57,7 +57,7 @@ const News = ({ toggleTheme, mode }) => {
 
     fetchNews();
 
-    // Refresh every 5 minutes
+  
     const interval = setInterval(fetchNews, 300000);
     return () => clearInterval(interval);
   }, []);
