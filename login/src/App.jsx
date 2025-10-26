@@ -5,8 +5,6 @@ import MainLayout from "./MainLayout";
 
 import Login from "./Login";
 import Signup from "./Signup";
-import Dashboard from "./Dashboard";
-import Feedback from "./feedback";
 import News from "./News";
 import { Report } from "./Report";
 import "./App.css";
@@ -56,14 +54,7 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
 
 
-          <Route
-            path="/dashboard"
-            element={
-              <MainLayout>
-                <Dashboard toggleTheme={toggleTheme} />
-              </MainLayout>
-            }
-          />
+
           <Route
             path="/shipments"
             element={
