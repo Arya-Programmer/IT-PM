@@ -187,23 +187,14 @@
 }
 
 
-/* 
-.feedback-input:focus{
-  outline: 2px solid #0000FF;
-}
 
-.feedback-input::placeholder{
-  text-align: left;
-} */
-
-/* General Navbar styling */
 .navbar {
   position: sticky;
   top: 0;
   left: 0;
   height: 65px;
   width: 100%;
-  background-color: #001f3f; /* dark navy */
+  background-color: #001f3f; 
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -215,7 +206,6 @@
   font-family: "Inter", sans-serif;
 }
 
-/* Left: Logo + title */
 .navbar-left {
   display: flex;
   align-items: center;
@@ -230,10 +220,10 @@
 .navbar-title {
   font-weight: 700;
   font-size: 1.3rem;
-  color: #ffc300; /* yellow accent */
+  color: #ffc300; 
 }
 
-/* Center: links */
+
 .navbar-links {
   display: flex;
   gap: 35px;
@@ -259,7 +249,7 @@
   font-weight: 600;
 }
 
-/* Right: user icon */
+
 .navbar-right {
   display: flex;
   align-items: center;
@@ -276,7 +266,7 @@
   color: #ffc300;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .navbar {
     padding: 0 20px;
@@ -318,11 +308,11 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  max-height: 90vh; /* Prevent dialog from growing too tall */
+  max-height: 90vh; 
   overflow: visible;
 }
 
-/* Title */
+
 .add-shipment-dialog h2 {
   font-weight: 600;
   font-size: 1.5rem;
@@ -330,17 +320,17 @@
   text-align: center;
 }
 
-/* Label styling above inputs */
+
 .add-shipment-dialog label {
   display: block;
   font-weight: 500;
   font-size: 1rem;
   margin-bottom: 0.3rem;
-  color: #facc15; /* Matches your separator text color */
+  color: #facc15; 
 }
 
 
-/* Add Shipment button */
+
 .add-shipment-dialog button.add-btn {
   width: 100%;
   padding: 0.85rem 1rem;
@@ -359,7 +349,7 @@
   background-color: #e6b800;
 }
 
-/* Close button (top right X) */
+
 .add-shipment-dialog .close-btn {
   position: absolute;
   top: 16px;
