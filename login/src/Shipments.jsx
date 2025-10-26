@@ -25,7 +25,7 @@ const Shipments = ({ toggleTheme, mode }) => {
 
   const isDark = mode === "dark";
 
-  // ✅ Determine shipment status based on delivery time
+
   const getStatus = (deliveryTime) => {
     if (!deliveryTime) return "Pending";
 
@@ -42,13 +42,12 @@ const Shipments = ({ toggleTheme, mode }) => {
     return "Pending";
   };
 
-  // ✅ Add status to each shipment
+
   const shipmentsWithStatus = shipments.map((s) => ({
     ...s,
     status: getStatus(s.time),
   }));
 
-  // ✅ Filter by search and status
   const q = searchQuery.toLowerCase();
   const filteredShipments = shipmentsWithStatus.filter((s) => {
     const matchesSearch =
@@ -63,7 +62,7 @@ const Shipments = ({ toggleTheme, mode }) => {
     return matchesSearch && matchesStatus;
   });
 
-  // ✅ Define DataGrid columns
+
   const columns = [
     { field: "mmsi", headerName: "Ship MMSI", width: 200 },
     { field: "bol", headerName: "Ship BOL", width: 220 },
@@ -78,22 +77,22 @@ const Shipments = ({ toggleTheme, mode }) => {
         let color = "";
         switch (status) {
           case "In Transit":
-            color = "#2563eb"; // blue
+            color = "#2563eb"; 
             break;
           case "Overdue":
-            color = "#d20000ff"; // yellow
+            color = "#d20000ff"; 
             break;
           case "Delivered":
-            color = "#16a34a"; // green
+            color = "#16a34a"; 
             break;
           case "Docked":
-            color = "#d97706"; // orange
+            color = "#d97706"; 
             break;
           case "Pending":
-            color = "#6b7280"; // gray
+            color = "#6b7280"; 
             break;
           default:
-            color = "#6b7280"; // fallback gray
+            color = "#6b7280"; 
         }
         return (
           <Chip
@@ -124,7 +123,7 @@ const Shipments = ({ toggleTheme, mode }) => {
         Shipments Overview
       </h2>
 
-      {/* 🔍 Top bar with search + filters + buttons */}
+    
       <div
         style={{
           display: "flex",
@@ -133,7 +132,7 @@ const Shipments = ({ toggleTheme, mode }) => {
           marginBottom: "25px",
         }}
       >
-        {/* Search Field */}
+      
         <div
           style={{
             display: "flex",
@@ -163,10 +162,10 @@ const Shipments = ({ toggleTheme, mode }) => {
           />
         </div>
 
-        {/* Buttons group */}
+      
 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "12px" }}>
-          {/* Add Button */}
+      
           <Button
             variant="contained"
             startIcon={<AddIcon />}
@@ -189,7 +188,7 @@ const Shipments = ({ toggleTheme, mode }) => {
         </div>
           
         <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-          {/* Status Filter */}
+    
           <Select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -220,7 +219,7 @@ const Shipments = ({ toggleTheme, mode }) => {
         </div>
       </div>
 
-      {/* 📊 Data Grid */}
+  
       <div
         style={{
           height: 500,
