@@ -10,7 +10,7 @@ const MainLayout = ({ children }) => {
 
   const current =
     path.includes("shipments") ? "shipments" :
-    path.includes("report") ? "reports" :
+    path.includes("report") ? "report" :
     path.includes("news") ? "news" :
     "";
 
