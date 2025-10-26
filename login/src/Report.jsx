@@ -12,10 +12,10 @@ export const Report = ({toggleTheme, mode}) => {
   const isDark = mode === "dark";
   const today = new Date();
   const startOfWeek = new Date(today);
-  startOfWeek.setDate(today.getDate() - today.getDay()); //sunday
+  startOfWeek.setDate(today.getDate() - today.getDay()); 
 
   const endOfWeek = new Date(today);
-  endOfWeek.setDate(today.getDate() + (6 - today.getDay())); //saturday
+  endOfWeek.setDate(today.getDate() + (6 - today.getDay())); 
 
   const week_delivery = shipments.filter((s) => {
     const deliveryDate = new Date(s.time);
