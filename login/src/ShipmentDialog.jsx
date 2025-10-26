@@ -9,7 +9,7 @@ import {
   TextField,
   IconButton,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";  // <-- Added import here
+import CloseIcon from "@mui/icons-material/Close";  
 
 const ShipmentDialog = ({ open, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -34,7 +34,7 @@ const ShipmentDialog = ({ open, onClose, onSubmit }) => {
 
     onSubmit(formData);
     onClose();
-    setFormData({ mmsi: "", bol: "", id: "", time: "" }); // Reset form
+    setFormData({ mmsi: "", bol: "", id: "", time: "" }); 
   };
 
   return (
