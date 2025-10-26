@@ -15,10 +15,10 @@ const Login = ({ error, setError }) => {
 
     if (email === admin.email && password === admin.password) {
       setError("");
-      navigate("/Dashboard");
+      navigate("/Shipments");
     } else if (email === user.email && password === user.password) {
       setError("");
-      navigate("/Dashboard");
+      navigate("/Shipments");
     } else {
       setError("Incorrect email or password.");
     }
