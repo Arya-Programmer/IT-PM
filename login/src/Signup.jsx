@@ -7,12 +7,12 @@ const Signup = () => {
 
   return (
     <div className="login-wrapper">
-      {/* Left image with overlay */}
+  
       <div className="login-left">
         
       </div>
 
-      {/* Right form container */}
+
       <div className="login-right">
         <div className="login-container">
           <h2 className="form-title">Welcome</h2>
@@ -25,7 +25,6 @@ const Signup = () => {
             <span>or</span>
           </p>
 
-          {/* Signup form */}
           <form>
             <div className="input-wrapper">
               <input
@@ -53,13 +52,12 @@ const Signup = () => {
               <i className="material-symbols-rounded">lock</i>
             </div>
 
-            {/* Sign up button */}
+        
             <button type="submit" className="login-button">
               Sign up
             </button>
           </form>
 
-          {/* Link to login */}
           <p className="signup-text">
             Already have an account?{" "}
             <Link className="signup-link" to="/login">
