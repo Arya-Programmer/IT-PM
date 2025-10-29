@@ -22,7 +22,6 @@
 
 .welcome-text {
   text-align: center;
-
 }
 
 .welcome-text h1 {
@@ -187,6 +186,15 @@
 }
 
 
+/* 
+.feedback-input:focus{
+  outline: 2px solid #0000FF;
+}
+
+.feedback-input::placeholder{
+  text-align: left;
+} */
+
 
 .navbar {
   position: sticky;
@@ -194,7 +202,7 @@
   left: 0;
   height: 65px;
   width: 100%;
-  background-color: #001f3f; 
+  background-color: #001f3f;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -205,6 +213,7 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   font-family: "Inter", sans-serif;
 }
+
 
 .navbar-left {
   display: flex;
@@ -266,18 +275,36 @@
   color: #ffc300;
 }
 
+.SideBar-link {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 10px 0;
+  width: 100%;
+  transition: color 0.3s;
+}
 
-@media (max-width: 768px) {
-  .navbar {
-    padding: 0 20px;
-  }
+.SideBar-link:hover {
+  color: #ffc300;
+}
+
+.Side-bar{
+    width: 250px;
+    height: 100vh;
+    background-color: #1e1e2f;
+    color: "white";
+    padding: 20px;
+    box-sizing: border-box;
+    position: fixed;
+}
+
   .navbar-links {
     gap: 20px;
   }
   .navbar-title {
     font-size: 1.1rem;
   }
-}
+
 
 
 
@@ -328,8 +355,6 @@
   margin-bottom: 0.3rem;
   color: #facc15; 
 }
-
-
 
 .add-shipment-dialog button.add-btn {
   width: 100%;
