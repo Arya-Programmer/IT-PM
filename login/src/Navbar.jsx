@@ -1,17 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./App.css";
-import { User, Search, Bell, Ship} from "lucide-react"; // icon library
+import { User, Search, Bell, Ship, Pointer} from "lucide-react"; // icon library
 import Shipments from "./Shipments.jsx"
 
-const Navbar = ({ current }) => {
+const Navbar = ({ current, onUserClick}) => {
   return (
     <nav className="navbar">
+      {/* Left side: Logo + Brand */}
       <div className="navbar-left">
         <Ship className="navbar-logo" color="#FFC300" size={26} />
         <span className="navbar-title">ShipTrack</span>
       </div>
 
+      {/* Center: Navigation Links */}
       <div className="navbar-links">
         <Link
           to="/shipments"
@@ -20,8 +22,8 @@ const Navbar = ({ current }) => {
           Shipments
         </Link>
         <Link
-          to="/reports"
-          className={`nav-link ${current === "reports" ? "active" : ""}`}
+          to="/report"
+          className={`nav-link ${current === "report" ? "active" : ""}`}
         >
           Reports
         </Link>
@@ -33,8 +35,12 @@ const Navbar = ({ current }) => {
         </Link>
       </div>
 
+      {/* Right side: Profile Icon */}
       <div className="navbar-right">
-        <User className="user-icon" size={22} />
+          <User 
+          className="user-icon" 
+          size={22} 
+          onClick={onUserClick} />
       </div>
     </nav>
   );
