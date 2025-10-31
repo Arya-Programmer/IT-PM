@@ -7,7 +7,7 @@ import Users from "./Users"
 import Login from "./Login";
 import Signup from "./Signup";
 import News from "./News";
-import { Report } from "./Report";
+import Report from "./Report";
 import "./App.css";
 import Shipments from "./Shipments"
 import SideBar from "./SideBar";
