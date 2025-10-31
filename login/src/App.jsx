@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import MainLayout from "./MainLayout"; 
+import Users from "./Users"
 
 import Login from "./Login";
 import Signup from "./Signup";
@@ -80,6 +81,16 @@ const App = () => {
               </MainLayout>
             }
           />
+
+          <Route
+            path="/users"
+            element={
+              <MainLayout>
+                <Users />
+              </MainLayout>
+            }
+          />
+
         </Routes>
         </Router>
       </div>
