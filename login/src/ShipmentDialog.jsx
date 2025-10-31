@@ -9,7 +9,7 @@ import {
   TextField,
   IconButton,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";  
+import CloseIcon from "@mui/icons-material/Close"; 
 
 const ShipmentDialog = ({ open, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -46,6 +46,7 @@ const ShipmentDialog = ({ open, onClose, onSubmit }) => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+          
           }}
         >
           Add New Shipment
@@ -69,19 +70,28 @@ const ShipmentDialog = ({ open, onClose, onSubmit }) => {
               </Typography>
               <TextField
                 name="mmsi"
+                placeholder="Ship MMSI"
                 value={formData.mmsi}
                 onChange={handleChange}
                 fullWidth
                 variant="outlined"
-                InputProps={{
+               InputProps={{
                   sx: {
                     borderRadius: '12px',
-                    height: "50px",
+                    height: '55px',
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#ffcc00',
-                    },
+                    borderColor: '#ffcc00',
+                    borderWidth: '2px',
+                    '& input::placeholder': {
+                    padding: '16px 14px',
+                    color: 'gray',       
+                    opacity: 1,  
+                           
+                  },
+                  },
                   },
                 }}
+
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -92,6 +102,14 @@ const ShipmentDialog = ({ open, onClose, onSubmit }) => {
                     },
                   },
                 }}
+
+                  InputLabelProps={{
+                sx: {
+                '&.Mui-focused': {
+                    color: '#facc15', 
+                },
+                },
+            }}
               />
             </Box>
 
@@ -101,16 +119,24 @@ const ShipmentDialog = ({ open, onClose, onSubmit }) => {
               </Typography>
               <TextField
                 name="bol"
+                placeholder="BOL"
                 value={formData.bol}
                 onChange={handleChange}
                 variant="outlined"
-                 InputProps={{
+                InputProps={{
                   sx: {
                     borderRadius: '12px',
-                    height: "50px",
+                    height: '55px',
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#ffcc00',
-                    },
+                    borderColor: '#ffcc00',
+                    borderWidth: '2px',
+                    '& input::placeholder': {
+                    padding: '16px 14px',
+                    color: 'gray',       
+                    opacity: 1,  
+                           
+                  },
+                  },
                   },
                 }}
                 sx={{
@@ -122,6 +148,13 @@ const ShipmentDialog = ({ open, onClose, onSubmit }) => {
                       borderColor: '#facc15',
                     },
                   },
+                }}
+                InputLabelProps={{
+                sx: {
+                    '&.Mui-focused': {
+                        color: '#facc15', 
+                    },
+                },
                 }}
                 fullWidth
               />
@@ -133,16 +166,24 @@ const ShipmentDialog = ({ open, onClose, onSubmit }) => {
               </Typography>
               <TextField
                 name="id"
+                placeholder="Ship ID"
                 value={formData.id}
                 onChange={handleChange}
                 variant="outlined"
                  InputProps={{
                   sx: {
                     borderRadius: '12px',
-                    height: "50px",
+                    height: '55px',
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#ffcc00',
-                    },
+                    borderColor: '#ffcc00',
+                    borderWidth: '2px',
+                    '& input::placeholder': {
+                    padding: '16px 14px',
+                    color: 'gray',       
+                    opacity: 1,  
+                           
+                  },
+                  },
                   },
                 }}
                 sx={{
@@ -154,6 +195,13 @@ const ShipmentDialog = ({ open, onClose, onSubmit }) => {
                       borderColor: '#facc15',
                     },
                   },
+                }}
+                InputLabelProps={{
+                sx: {
+                    '&.Mui-focused': {
+                        color: '#facc15', 
+                    },
+                },
                 }}
                 fullWidth
               />
@@ -169,14 +217,20 @@ const ShipmentDialog = ({ open, onClose, onSubmit }) => {
                 value={formData.time}
                 onChange={handleChange}
                 variant="outlined"
-                InputLabelProps={{ shrink: true }}
-                 InputProps={{
+                InputProps={{
                   sx: {
                     borderRadius: '12px',
-                    height: "50px",
+                    height: '55px',
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#ffcc00',
-                    },
+                    borderColor: '#ffcc00',
+                    borderWidth: '2px',
+                    '& input::placeholder': {
+                    padding: '16px 14px',
+                    color: 'gray',       
+                    opacity: 1,  
+                           
+                  },
+                  },
                   },
                 }}
                 sx={{
@@ -188,6 +242,13 @@ const ShipmentDialog = ({ open, onClose, onSubmit }) => {
                       borderColor: '#facc15',
                     },
                   },
+                }}
+                InputLabelProps={{
+                sx: {
+                    '&.Mui-focused': {
+                        color: '#facc15', 
+                    },
+                },
                 }}
                 fullWidth
               />
