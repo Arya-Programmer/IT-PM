@@ -25,7 +25,6 @@ const Shipments = ({ toggleTheme, mode }) => {
 
   const isDark = mode === "dark";
 
-
   const getStatus = (deliveryTime) => {
     if (!deliveryTime) return "Pending";
 
@@ -41,7 +40,6 @@ const Shipments = ({ toggleTheme, mode }) => {
 
     return "Pending";
   };
-
 
   const shipmentsWithStatus = shipments.map((s) => ({
     ...s,
@@ -61,7 +59,6 @@ const Shipments = ({ toggleTheme, mode }) => {
 
     return matchesSearch && matchesStatus;
   });
-
 
   const columns = [
     { field: "mmsi", headerName: "Ship MMSI", width: 200 },
@@ -118,12 +115,12 @@ const Shipments = ({ toggleTheme, mode }) => {
 
 
   return (
-    <div style={{ paddingLeft: "40px" }}>
-      <h2 style={{ fontSize: "24px", fontWeight: "600", marginBottom: "20px" }}>
+    <div style={{ paddingTop: "40px", paddingLeft: "40px", maxWidth: "1300px", marginInline: "auto" }}>
+      <h2 style={{ fontSize: "24px", fontWeight: "600",  marginBottom: "20px" }}>
         Shipments Overview
       </h2>
 
-    
+
       <div
         style={{
           display: "flex",
@@ -132,7 +129,7 @@ const Shipments = ({ toggleTheme, mode }) => {
           marginBottom: "25px",
         }}
       >
-      
+
         <div
           style={{
             display: "flex",
@@ -162,10 +159,9 @@ const Shipments = ({ toggleTheme, mode }) => {
           />
         </div>
 
-      
 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "12px" }}>
-      
+    
           <Button
             variant="contained"
             startIcon={<AddIcon />}
@@ -187,8 +183,8 @@ const Shipments = ({ toggleTheme, mode }) => {
           <ShipmentDialog open={openAddDialog} onClose={handleCloseDialog} />
         </div>
           
-        <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-    
+        <div style={{ display: "flex", alignItems: "center", gap: "15px"}}>
+
           <Select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -219,7 +215,7 @@ const Shipments = ({ toggleTheme, mode }) => {
         </div>
       </div>
 
-  
+   
       <div
         style={{
           height: 500,
