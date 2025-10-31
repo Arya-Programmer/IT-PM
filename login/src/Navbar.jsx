@@ -7,13 +7,12 @@ import Shipments from "./Shipments.jsx"
 const Navbar = ({ current, onUserClick}) => {
   return (
     <nav className="navbar">
-      {/* Left side: Logo + Brand */}
+
       <div className="navbar-left">
         <Ship className="navbar-logo" color="#FFC300" size={26} />
         <span className="navbar-title">ShipTrack</span>
       </div>
 
-      {/* Center: Navigation Links */}
       <div className="navbar-links">
         <Link
           to="/shipments"
@@ -35,7 +34,6 @@ const Navbar = ({ current, onUserClick}) => {
         </Link>
       </div>
 
-      {/* Right side: Profile Icon */}
       <div className="navbar-right">
           <User 
           className="user-icon" 
