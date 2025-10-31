@@ -34,7 +34,6 @@ const MainLayout = ({ children }) => {
           zIndex: 9998,
         }}
       >
-        {/* Sidebar */}
         <div
           onClick={(e) => e.stopPropagation()}
           style={{
