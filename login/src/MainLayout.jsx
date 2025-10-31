@@ -28,7 +28,6 @@ const MainLayout = ({ children }) => {
           left: 0,
           width: "100vw",
           height: "100vh",
-          background: "rgba(0,0,0,0.3)",
           opacity: showSidebar ? 1 : 0,
           pointerEvents: showSidebar ? "auto" : "none",
           transition: "opacity 0.3s ease",
