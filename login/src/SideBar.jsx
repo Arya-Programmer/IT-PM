@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import './App.css'
 
 const SideBar = () => {
@@ -9,19 +10,19 @@ const SideBar = () => {
       <nav>
         <ul className="Side-bar">
           <li>
-            <a className="SideBar-link" href="#">
+            <Link className="SideBar-link" to="#">
               Profile
-            </a>
+            </Link>
           </li>
           <li>
-            <a className="SideBar-link" href="#">
+            <Link className="SideBar-link" to="/Users">
               Users
-            </a>
+            </Link>
           </li>
           <li>
-            <a className="SideBar-link" href="#">
+            <Link className="SideBar-link" to="#">
               Archives
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>
