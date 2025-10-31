@@ -1,10 +1,10 @@
 import React from "react";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import html2canvas from "html2canvas";
 import { FileSpreadsheet, Download } from "lucide-react";
 
-const ExportButtons = ({ data, columns, fileName = "report" }) => {
+const ExportButtons = ({ data, columns, fileName = "report", exportTargetId }) => {
   const exportExcel = () => {
     const sheetData = [
       columns.map((col) => col.label),
@@ -16,16 +16,34 @@ const ExportButtons = ({ data, columns, fileName = "report" }) => {
     XLSX.writeFile(wb, `${fileName}.xlsx`);
   };
 
-  const exportPDF = () => {
-    const doc = new jsPDF();
-    doc.text(`${fileName} Report`, 14, 15);
-    autoTable(doc, {
-      startY: 25,
-      head: [columns.map((col) => col.label)],
-      body: data.map((item) => columns.map((col) => item[col.field] ?? "")),
-    });
-    doc.save(`${fileName}.pdf`);
-  };
+  const exportPDF = async () => {
+  const element = document.querySelector(`#${exportTargetId}`);
+
+  if (!element) {
+    alert("Shipment area not found!");
+    return;
+  }
+
+
+  await new Promise((r) => setTimeout(r, 200));
+
+  const canvas = await html2canvas(element, {
+    scale: 2, 
+    useCORS: true,
+    backgroundColor: "#ffffff",
+  });
+
+  const imgData = canvas.toDataURL("image/png");
+  const pdf = new jsPDF("p", "mm", "a4");
+
+  const margin = 10; 
+  const pdfWidth = pdf.internal.pageSize.getWidth() - margin * 2;
+  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+  pdf.addImage(imgData, "PNG", margin, margin, pdfWidth, pdfHeight);
+  pdf.save(`${fileName}.pdf`);
+};
+
 
   return (
     <div style={{ display: "flex", gap: "10px" }}>
@@ -43,8 +61,6 @@ const ExportButtons = ({ data, columns, fileName = "report" }) => {
           cursor: "pointer",
           transition: "0.2s",
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f9fafb")}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "white")}
       >
         <Download size={18} /> PDF
       </button>
@@ -63,8 +79,6 @@ const ExportButtons = ({ data, columns, fileName = "report" }) => {
           cursor: "pointer",
           transition: "0.2s",
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f9fafb")}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "white")}
       >
         <FileSpreadsheet size={18} /> Excel
       </button>
