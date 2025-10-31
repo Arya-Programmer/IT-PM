@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./App.css"; 
 
+
 const Login = ({ error, setError }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -10,7 +11,7 @@ const Login = ({ error, setError }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const admin = { email: "admin@example.com", password: "admin123", role: "admin" };
+    const admin = { email: "savia@gmail.com", password: "savia123", role: "admin" };
     const user = { email: "user@example.com", password: "user123", role: "user" };
 
     if (email === admin.email && password === admin.password) {
@@ -26,18 +27,19 @@ const Login = ({ error, setError }) => {
 
   return (
     <div className="login-wrapper">
+      {/* Left panel with background and text */}
       <div className="login-left">
       </div>
 
-   
+      {/* Right panel with form */}
       <div className="login-right">
         <div className="login-container">
           <h2 className="form-title">Welcome Back</h2>
           <p className="form-subtitle">Sign in to your account</p>
 
-          <p className="separator">
+          {/* <p className="separator">
             <span>or</span>
-          </p>
+          </p> */}
 
           <form className="login-form" onSubmit={handleSubmit}>
             <div className="input-wrapper">
@@ -65,13 +67,13 @@ const Login = ({ error, setError }) => {
               />
               <i className="material-symbols-rounded">lock</i>
             </div>
-
+{/* 
             <div className="login-options">
               <label>
                 <input type="checkbox" /> Remember Me
               </label>
               <a href="#">Forgot Password?</a>
-            </div>
+            </div> */}
 
             {error && <div className="error">{error}</div>}
 
@@ -80,12 +82,12 @@ const Login = ({ error, setError }) => {
             </button>
           </form>
 
-          <p className="signup-text">
+          {/* <p className="signup-text">
             Don’t have an account?{" "}
             <Link className="signup-link" to="/signup">
               Sign Up
             </Link>
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
