@@ -27,11 +27,8 @@ const Login = ({ error, setError }) => {
 
   return (
     <div className="login-wrapper">
-      {/* Left panel with background and text */}
       <div className="login-left">
       </div>
-
-      {/* Right panel with form */}
       <div className="login-right">
         <div className="login-container">
           <h2 className="form-title">Welcome Back</h2>
