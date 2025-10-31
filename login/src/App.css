@@ -19,10 +19,11 @@
   background: url('/logos/shipments.png') center center/cover no-repeat;
   position: relative;
 }
-
+/* 
 .welcome-text {
   text-align: center;
-}
+   margin-bottom: 2rem;
+/* }
 
 .welcome-text h1 {
   font-size: 2rem;
@@ -33,7 +34,7 @@
 .welcome-text p {
   font-size: 1.1rem;
   color: #666;
-}
+} */
 
 
 .login-left h1 {
@@ -162,6 +163,7 @@
   background: #e6b800;
 }
 
+/* 
 .signup-text {
   text-align: center;
   margin-top: 1rem;
@@ -176,7 +178,7 @@
 
 .signup-link:hover {
   text-decoration: underline;
-}
+} */
 
 .error {
   color: red;
@@ -202,7 +204,7 @@
   left: 0;
   height: 65px;
   width: 100%;
-  background-color: #001f3f;
+  background-color: #001f3f; 
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -289,44 +291,28 @@
 }
 
 .Side-bar{
-    width: 250px;
-    height: 100vh;
-    background-color: #1e1e2f;
-    color: "white";
-    padding: 20px;
-    box-sizing: border-box;
-    position: fixed;
+  width: 250px;
+  height: 100vh;
+  background-color: #1e1e2f;
+  color: "white";
+  padding: 20px;
+  box-sizing: border-box;
+  position: fixed;
 }
 
-  .navbar-links {
-    gap: 20px;
-  }
-  .navbar-title {
-    font-size: 1.1rem;
-  }
-
-
-
-
-.dark-mode .login-container {
-  background: #1a1a1a;
-  color: #f0f0f0;
+.navbar-links {
+  gap: 20px;
+}
+.navbar-title {
+  font-size: 1.1rem;
 }
 
-.dark-mode .darkModeButton{
-  color: black;
-}
-
-.dark-mode .card{
-  color: #f0f0f0;
-  background: #1a1a1a;
-}
 
 .add-shipment-dialog {
   font-family: "Montserrat", sans-serif;
   padding: 1rem 1.5rem;
   background: white;
-  border-radius: 12px;
+  border-radius: 15px;
   max-width: 480px;
   width: 100%;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -339,14 +325,12 @@
   overflow: visible;
 }
 
-
 .add-shipment-dialog h2 {
   font-weight: 600;
   font-size: 1.5rem;
   color: "black";
   text-align: center;
 }
-
 
 .add-shipment-dialog label {
   display: block;
@@ -355,6 +339,7 @@
   margin-bottom: 0.3rem;
   color: #facc15; 
 }
+
 
 .add-shipment-dialog button.add-btn {
   width: 100%;
@@ -375,7 +360,53 @@
 }
 
 
+.add-user-dialog {
+  font-family: "Montserrat", sans-serif;
+  padding: 1rem 1.5rem;
+  background: white;
+  border-radius: 15px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  color: #0b1f3a;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 90vh; 
+  overflow: visible;
+}
+
+.add-user-dialog h2 {
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: "black";
+  text-align: center;
+}
+
+.add-user-dialog label {
+  display: block;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+  color: "gray"; 
+}
+
+.add-user-dialog button.add-btn {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background-color: #ffcc00;
+  color: #0b1f3a;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 0.5rem;
+}
 
 
-
-
+.add-user-dialog button.add-btn:hover {
+  background-color: #e6b800;
+}
