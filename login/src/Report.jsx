@@ -137,14 +137,14 @@ export const Report = ({ toggleTheme, mode }) => {
         paddingTop: "20px",
         marginLeft: "10px",
         marginBottom: "50px",
+        maxWidth: "1300px",
+        marginInline: "auto"
       }}
     >
       <h1 style={{marginBottom: 30}}>Shipment Reports</h1>
 
-      {/* Filters + Export */}
       <Box sx={{ display: "flex", alignItems: "center", mb: 3, gap: 5, marginBottom: 5, }}>
-        
-        
+
         <Select
           value={period}
           onChange={(e) => setPeriod(e.target.value)}
@@ -185,10 +185,9 @@ export const Report = ({ toggleTheme, mode }) => {
         </Box>
       </Box>
 
-      {/* Summary Cards */}
 
-        <Grid container spacing={4} sx={{ mb: 5 }}>
-  {/* Card 1 */}
+  <Grid container spacing={4} sx={{ mb: 5 }}>
+
   <Grid item xs={12} md={4}>
     <Card
       sx={{
@@ -201,7 +200,6 @@ export const Report = ({ toggleTheme, mode }) => {
         width: 360
       }}
     >
-      {/* Icon circle top right */}
       <Box
         sx={{
           position: "absolute",
@@ -216,7 +214,7 @@ export const Report = ({ toggleTheme, mode }) => {
           justifyContent: "center",
         }}
       >
-        {/* Replace with your calendar icon or similar */}
+       
         <CalendarTodayIcon sx={{ color: "#d40000ff" }} />
       </Box>
 
@@ -232,7 +230,7 @@ export const Report = ({ toggleTheme, mode }) => {
     </Card>
   </Grid>
 
-  {/* Card 2 */}
+  
   <Grid item xs={12} md={4}>
     <Card
       sx={{
@@ -286,7 +284,7 @@ export const Report = ({ toggleTheme, mode }) => {
     </Card>
   </Grid>
 
-  {/* Card 3 */}
+
   <Grid item xs={12} md={4}>
     <Card
       sx={{
@@ -328,7 +326,6 @@ export const Report = ({ toggleTheme, mode }) => {
     </Card>
   </Grid>
   <Grid container spacing={4}>
-  {/* Weekly Shipment Activity (Bar Chart) */}
   <Grid item xs={12} md={6}>
     <Card sx={{ borderRadius: 3, p: 2, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", height: 400,
         width: 510}}>
@@ -347,7 +344,6 @@ export const Report = ({ toggleTheme, mode }) => {
     </Card>
   </Grid>
 
-  {/* Monthly Delivery Trends (Line Chart) */}
   <Grid item xs={12} md={6}>
     <Card sx={{ borderRadius: 3, p: 2, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", height: 400,
         width: 510 }}>
@@ -363,7 +359,7 @@ export const Report = ({ toggleTheme, mode }) => {
           <Line
           type="monotone"
           dataKey="deliveries"
-          stroke="#0b1526"             // dark navy line
+          stroke="#0b1526"             
           strokeWidth={2}
           dot={{ r: 4, fill: "#fff", stroke: "#0b1526", strokeWidth: 2 }} // hollow white circles with dark border
           activeDot={{ r: 6, fill: "#fff", stroke: "#0b1526", strokeWidth: 2 }}
