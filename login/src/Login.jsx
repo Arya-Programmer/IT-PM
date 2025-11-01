@@ -21,6 +21,10 @@ const Login = ({ error, setError }) => {
       setIsSubmitting(true);
       setError("");
 
+      ["userRole", "accessToken", "createdByAdmin", "userName", "userId"].forEach(
+        (key) => localStorage.removeItem(key)
+      );
+
       const response = await fetch(`${apiBaseUrl}/login`, {
         method: "POST",
         headers: {
@@ -37,6 +41,35 @@ const Login = ({ error, setError }) => {
 
       if (data?.role) {
         localStorage.setItem("userRole", data.role);
+      } else {
+        localStorage.removeItem("userRole");
+      }
+
+      if (typeof data?.accessToken === "string" && data.accessToken) {
+        localStorage.setItem("accessToken", data.accessToken);
+      } else {
+        localStorage.removeItem("accessToken");
+      }
+
+      if (data?.createdByAdmin !== undefined) {
+        localStorage.setItem(
+          "createdByAdmin",
+          data.createdByAdmin ? "true" : "false"
+        );
+      } else {
+        localStorage.removeItem("createdByAdmin");
+      }
+
+      if (data?.name) {
+        localStorage.setItem("userName", data.name);
+      } else {
+        localStorage.removeItem("userName");
+      }
+
+      if (data?.userId) {
+        localStorage.setItem("userId", data.userId);
+      } else {
+        localStorage.removeItem("userId");
       }
 
       navigate("/Shipments");

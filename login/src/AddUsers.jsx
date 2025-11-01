@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -11,33 +11,68 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
+const INITIAL_FORM = {
+  name: "",
+  email: "",
+  password: "",
+  role: "",
+};
+
 const AddUsers = ({ open, onClose, onSubmit }) => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    role: "",
-    name: "",
-  });
+  const [formData, setFormData] = useState(INITIAL_FORM);
+  const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleChange = (e) => {
+  useEffect(() => {
+    if (!open) {
+      setFormData(INITIAL_FORM);
+      setFormError("");
+      setIsSubmitting(false);
+    }
+  }, [open]);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
+    setFormError("");
     setFormData((prev) => ({ ...prev, [name]: value }));
-    };
+  };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.password || !formData.role) {
-      alert("Please fill in all fields.");
+      setFormError("Please fill in all fields.");
       return;
     }
 
-    onSubmit(formData);
-    onClose();
-    setFormData({name:"", email: "", password: "", role: "" });
+    try {
+      setIsSubmitting(true);
+      setFormError("");
+
+      if (typeof onSubmit === "function") {
+        await onSubmit(formData);
+      }
+
+      setFormData(INITIAL_FORM);
+
+      if (typeof onClose === "function") {
+        onClose();
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unable to add user.";
+      setFormError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
+  const handleClose = () => {
+    if (typeof onClose === "function") {
+      onClose();
+    }
+  };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={handleClose}>
       <div className="add-user-dialog">
         <DialogTitle
           sx={{
@@ -50,7 +85,7 @@ const AddUsers = ({ open, onClose, onSubmit }) => {
           Add New User
           <IconButton
             aria-label="close"
-            onClick={onClose}
+            onClick={handleClose}
             sx={{ color: (theme) => theme.palette.grey[500] }}
             size="large"
           >
@@ -67,6 +102,7 @@ const AddUsers = ({ open, onClose, onSubmit }) => {
               onChange={handleChange}
               variant="outlined"
               fullWidth
+              disabled={isSubmitting}
                InputProps={{
                   sx: {
                     borderRadius: '12px',
@@ -110,6 +146,7 @@ const AddUsers = ({ open, onClose, onSubmit }) => {
               variant="outlined"
               onChange={handleChange}
               fullWidth
+              disabled={isSubmitting}
               InputProps={{
                   sx: {
                     borderRadius: '12px',
@@ -154,6 +191,7 @@ const AddUsers = ({ open, onClose, onSubmit }) => {
               variant="outlined"
               onChange={handleChange}
               fullWidth
+              disabled={isSubmitting}
              InputProps={{
                   sx: {
                     borderRadius: '12px',
@@ -197,6 +235,7 @@ const AddUsers = ({ open, onClose, onSubmit }) => {
               variant="outlined"
               onChange={handleChange}
               fullWidth
+              disabled={isSubmitting}
             InputProps={{
                   sx: {
                     borderRadius: '12px',
@@ -233,9 +272,16 @@ const AddUsers = ({ open, onClose, onSubmit }) => {
                 },
             }}
             />
+            {formError && (
+              <Typography color="error" variant="body2">
+                {formError}
+              </Typography>
+            )}
+
             <Button
               variant="contained"
               onClick={handleSubmit}
+              disabled={isSubmitting}
               sx={{
                 backgroundColor: "#facc15",
                 height: "50px",
@@ -246,7 +292,7 @@ const AddUsers = ({ open, onClose, onSubmit }) => {
                 "&:hover": { backgroundColor: "#fbbf24" },
               }}
             >
-              Add User
+              {isSubmitting ? "Adding..." : "Add User"}
             </Button>
           </Box>
         </DialogContent>
