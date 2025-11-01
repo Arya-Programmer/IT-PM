@@ -1,7 +1,7 @@
 # IT-PM Login Application
 
 ## Overview
-This repository contains a simple login experience composed of a React front end (`login/`) and a lightweight Express backend (`login-backend/`). The frontend now sends credentials to the backend's `/login` endpoint, which validates them against an in-memory user list. You can override the backend URL via an environment variable when needed.
+This repository contains a simple login experience composed of a React front end (`login/`) and a lightweight Express backend (`login-backend/`). The frontend sends credentials to the backend's `/login` endpoint, which proxies them to Supabase Auth and returns the associated role from your Supabase profile table. You can override the backend URL via an environment variable when needed.
 
 ## Prerequisites
 - Node.js 18 or later (earlier versions may work, but the project is built with modern tooling).
@@ -24,15 +24,22 @@ npm install
    cd login-backend
    ```
 2. Ensure dependencies are installed (see above).
-3. Start the server:
+3. Provide Supabase credentials by copying `.env.example` to `.env` and filling in your project values:
+   ```bash
+   cp .env.example .env
+   ```
+
+   Required variables:
+   - `SUPABASE_URL` – your project URL (e.g., `https://xyzcompany.supabase.co`).
+   - `SUPABASE_ANON_KEY` – an anon key permitted to call the password grant flow.
+
+   Optional overrides let you customise which table and columns store role information (`SUPABASE_PROFILE_TABLE`, `SUPABASE_PROFILE_ROLE_COLUMN`, and `SUPABASE_PROFILE_USER_ID_COLUMN`).
+
+4. Start the server:
    ```bash
    node server.js
    ```
-4. The API will be available at `http://localhost:5000/login`. The server accepts POST requests containing an `email` and `password` field and responds with a success message and role when the credentials match one of the predefined users.
-
-   The default demo credentials are:
-   - `admin@example.com` / `admin123`
-   - `user@example.com` / `user123`
+5. The API will be available at `http://localhost:5000/login`. The server accepts POST requests containing an `email` and `password` field, signs the user in with Supabase, looks up their role, and returns that role to the client. Ensure your Supabase policies allow authenticated users to read their profile row so the role lookup succeeds.
 
 > Tip: If you prefer automatic restarts during development, install `nodemon` globally (`npm install -g nodemon`) and run `nodemon server.js` instead.
 
@@ -64,11 +71,12 @@ IT-PM/
 │   ├── .env.example    # Sample environment file for the frontend API URL
 │   ├── package.json
 │   └── src/
-└── login-backend/      # Express backend with a simple /login route
+└── login-backend/      # Express backend proxying authentication through Supabase
+    ├── .env.example    # Sample Supabase configuration
     ├── package.json
     └── server.js
 ```
 
 ## Additional Notes
 - Both projects rely on npm scripts defined in their respective `package.json` files. Explore those files if you need to customize build or lint commands.
-- The backend stores credentials in memory for demonstration purposes only. Replace it with a persistent data store and proper authentication strategy before using in production.
+- Supabase manages credentials and roles. Ensure you configure a `profiles` (or equivalent) table with an accessible role column so the backend can return role information to the frontend.
