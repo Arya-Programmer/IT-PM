@@ -1,27 +1,87 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "./App.css"; 
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./App.css";
 
 
 const Login = ({ error, setError }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const apiBaseUrl = useMemo(
+    () => import.meta.env.VITE_API_BASE_URL || "http://localhost:5000",
+    []
+  );
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const admin = { email: "savia@gmail.com", password: "savia123", role: "admin" };
-    const user = { email: "user@example.com", password: "user123", role: "user" };
+    try {
+      setIsSubmitting(true);
+      setError("");
 
-    if (email === admin.email && password === admin.password) {
-      setError("");
+      ["userRole", "accessToken", "createdByAdmin", "userName", "userId"].forEach(
+        (key) => localStorage.removeItem(key)
+      );
+
+      const response = await fetch(`${apiBaseUrl}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Incorrect email or password.");
+      }
+
+      if (data?.role) {
+        localStorage.setItem("userRole", data.role);
+      } else {
+        localStorage.removeItem("userRole");
+      }
+
+      if (typeof data?.accessToken === "string" && data.accessToken) {
+        localStorage.setItem("accessToken", data.accessToken);
+      } else {
+        localStorage.removeItem("accessToken");
+      }
+
+      if (data?.createdByAdmin !== undefined) {
+        localStorage.setItem(
+          "createdByAdmin",
+          data.createdByAdmin ? "true" : "false"
+        );
+      } else {
+        localStorage.removeItem("createdByAdmin");
+      }
+
+      if (data?.name) {
+        localStorage.setItem("userName", data.name);
+      } else {
+        localStorage.removeItem("userName");
+      }
+
+      if (data?.userId) {
+        localStorage.setItem("userId", data.userId);
+      } else {
+        localStorage.removeItem("userId");
+      }
+
       navigate("/Shipments");
-    } else if (email === user.email && password === user.password) {
-      setError("");
-      navigate("/Shipments");
-    } else {
-      setError("Incorrect email or password.");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "An unexpected error occurred.";
+      setError(
+        message === "Failed to fetch"
+          ? "Unable to reach the login server. Please ensure the backend is running."
+          : message
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -74,8 +134,8 @@ const Login = ({ error, setError }) => {
 
             {error && <div className="error">{error}</div>}
 
-            <button type="submit" className="login-button">
-              Login
+            <button type="submit" className="login-button" disabled={isSubmitting}>
+              {isSubmitting ? "Signing in..." : "Login"}
             </button>
           </form>
 
