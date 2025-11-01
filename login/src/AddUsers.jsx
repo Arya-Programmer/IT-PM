@@ -4,7 +4,6 @@ import {
   DialogTitle,
   DialogContent,
   Button,
-  Typography,
   Box,
   TextField,
   IconButton,
@@ -18,21 +17,30 @@ const AddUsers = ({ open, onClose, onSubmit }) => {
     role: "",
     name: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    };
+  };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.password || !formData.role) {
       alert("Please fill in all fields.");
       return;
     }
 
-    onSubmit(formData);
-    onClose();
-    setFormData({name:"", email: "", password: "", role: "" });
+    setIsSubmitting(true);
+
+    try {
+      await onSubmit?.(formData);
+      onClose?.();
+      setFormData({ name: "", email: "", password: "", role: "" });
+    } catch (error) {
+      alert(error.message || "Unable to add user.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
 
@@ -236,6 +244,7 @@ const AddUsers = ({ open, onClose, onSubmit }) => {
             <Button
               variant="contained"
               onClick={handleSubmit}
+              disabled={isSubmitting}
               sx={{
                 backgroundColor: "#facc15",
                 height: "50px",
@@ -246,7 +255,7 @@ const AddUsers = ({ open, onClose, onSubmit }) => {
                 "&:hover": { backgroundColor: "#fbbf24" },
               }}
             >
-              Add User
+              {isSubmitting ? "Adding..." : "Add User"}
             </Button>
           </Box>
         </DialogContent>

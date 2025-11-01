@@ -1,10 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./App.css";
-import { User, Search, Bell, Ship, Pointer} from "lucide-react"; // icon library
-import Shipments from "./Shipments.jsx"
-
-const Navbar = ({ current, onUserClick}) => {
+import { User, Ship } from "lucide-react"; // icon library
+const Navbar = ({ current, onUserClick, user }) => {
   return (
     <nav className="navbar">
 
@@ -35,10 +33,16 @@ const Navbar = ({ current, onUserClick}) => {
       </div>
 
       <div className="navbar-right">
-          <User 
-          className="user-icon" 
-          size={22} 
-          onClick={onUserClick} />
+        {user ? (
+          <span className="navbar-user-name">
+            {user.name || user.email}
+          </span>
+        ) : null}
+        <User
+          className="user-icon"
+          size={22}
+          onClick={onUserClick}
+        />
       </div>
     </nav>
   );
