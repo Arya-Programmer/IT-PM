@@ -205,18 +205,19 @@ const Shipments = ({ toggleTheme, mode }) => {
             <MenuItem value="Pending">Pending</MenuItem>
           </Select>
 
-          <ExportButtons
-            data={filteredShipments}
-            columns={shipmentColumns}
-            fileName="Shipments"
-          />
+         <ExportButtons
+  data={filteredShipments}
+  columns={shipmentColumns}
+  fileName="Shipments"
+  exportTargetId="shipment-table"
+/>
 
           
         </div>
       </div>
 
    
-      <div
+      <div id="shipment-table"
         style={{
           height: 500,
           borderRadius: "12px",
