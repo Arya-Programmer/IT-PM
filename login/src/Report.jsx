@@ -137,8 +137,13 @@ const Report = ({ toggleTheme, mode }) => {
         paddingLeft: "20px",
         paddingTop: "20px",
         marginBottom: "50px",
-        maxWidth: "1300px",
         marginInline: "auto",
+        maxWidth: "1300px",
+        margin: "0 auto",
+        padding: "20px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "left",
       }}
     >
       <Typography variant="h4" sx={{ mb: 3 }}>
