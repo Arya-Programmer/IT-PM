@@ -1,27 +1,41 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "./App.css"; 
+import { useNavigate } from "react-router-dom";
+import "./App.css";
+import { API_BASE_URL } from "./config";
 
-
-const Login = ({ error, setError }) => {
+const Login = ({ error, setError, onLogin }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const admin = { email: "savia@gmail.com", password: "savia123", role: "admin" };
-    const user = { email: "user@example.com", password: "user123", role: "user" };
+    setIsSubmitting(true);
+    setError("");
 
-    if (email === admin.email && password === admin.password) {
-      setError("");
-      navigate("/Shipments");
-    } else if (email === user.email && password === user.password) {
-      setError("");
-      navigate("/Shipments");
-    } else {
-      setError("Incorrect email or password.");
+    try {
+      const response = await fetch(`${API_BASE_URL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Unable to login");
+      }
+
+      onLogin?.(data);
+      navigate("/shipments");
+    } catch (err) {
+      setError(err.message || "Incorrect email or password.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -74,17 +88,10 @@ const Login = ({ error, setError }) => {
 
             {error && <div className="error">{error}</div>}
 
-            <button type="submit" className="login-button">
-              Login
+            <button type="submit" className="login-button" disabled={isSubmitting}>
+              {isSubmitting ? "Signing in..." : "Login"}
             </button>
           </form>
-
-          {/* <p className="signup-text">
-            Don’t have an account?{" "}
-            <Link className="signup-link" to="/signup">
-              Sign Up
-            </Link>
-          </p> */}
         </div>
       </div>
     </div>

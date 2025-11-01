@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import Navbar from "./Navbar";
 import SideBar from "./SideBar";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 const MainLayout = ({ children }) => {
   const location = useLocation();
   const path = location.pathname;
+  const { auth } = useAuth();
 
   const current =
     path.includes("shipments") ? "shipments" :
@@ -17,7 +19,11 @@ const MainLayout = ({ children }) => {
 
   return (
     <>
-      <Navbar current={current} onUserClick={() => setShowSidebar(true)} />
+      <Navbar
+        current={current}
+        onUserClick={() => setShowSidebar(true)}
+        user={auth?.user}
+      />
 
       {/* Overlay */}
       <div
@@ -32,6 +38,7 @@ const MainLayout = ({ children }) => {
           pointerEvents: showSidebar ? "auto" : "none",
           transition: "opacity 0.3s ease",
           zIndex: 9998,
+          backgroundColor: showSidebar ? "rgba(0, 0, 0, 0.4)" : "transparent",
         }}
       >
         <div

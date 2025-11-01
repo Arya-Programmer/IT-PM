@@ -267,6 +267,13 @@
   justify-content: center;
 }
 
+.navbar-user-name {
+  margin-right: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: white;
+}
+
 .user-icon {
   color: white;
   cursor: pointer;
@@ -290,14 +297,61 @@
   color: #ffc300;
 }
 
-.Side-bar{
+.sidebar-container {
   width: 250px;
-  height: 100vh;
+  height: 100%;
   background-color: #1e1e2f;
-  color: "white";
-  padding: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
-  position: fixed;
+}
+
+.Side-bar{
+  list-style: none;
+  padding: 20px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.sidebar-profile {
+  padding: 20px;
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-name {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.sidebar-role {
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.sidebar-logout {
+  margin: 0 20px 20px;
+  width: calc(100% - 40px);
+  padding: 10px 14px;
+  background-color: #f87171;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin-top: auto;
+}
+
+.sidebar-logout:hover {
+  background-color: #ef4444;
 }
 
 .navbar-links {

@@ -1,22 +1,25 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
-import MainLayout from "./MainLayout"; 
-import Users from "./Users"
+import MainLayout from "./MainLayout";
+import Users from "./Users";
 
 import Login from "./Login";
-import Signup from "./Signup";
 import News from "./News";
 import Report from "./Report";
 import "./App.css";
-import Shipments from "./Shipments"
-import SideBar from "./SideBar";
+import Shipments from "./Shipments";
+import { AuthContext } from "./AuthContext";
 
 const App = () => {
   const [error, setError] = useState("");
 
 
   const [mode, setMode] = useState("light");
+  const [auth, setAuth] = useState(() => {
+    const stored = localStorage.getItem("auth");
+    return stored ? JSON.parse(stored) : null;
+  });
 
 
   useEffect(() => {
@@ -33,6 +36,16 @@ const App = () => {
     setMode((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+  const handleLogin = (session) => {
+    setAuth(session);
+    localStorage.setItem("auth", JSON.stringify(session));
+  };
+
+  const clearAuthState = () => {
+    setAuth(null);
+    localStorage.removeItem("auth");
+  };
+
   const theme = useMemo(
     () =>
       createTheme({
@@ -43,53 +56,90 @@ const App = () => {
     [mode]
   );
 
+  const requireAuth = (element) =>
+    auth ? element : <Navigate to="/login" replace />;
+
+  const requireAdmin = (element) =>
+    auth?.user?.role === "admin"
+      ? element
+      : auth
+        ? <Navigate to="/shipments" replace />
+        : <Navigate to="/login" replace />;
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className={mode === "dark" ? "dark-mode" : ""}>
-        <Router>
-          <Routes>
-          <Route path="/" element={<Login error={error} setError={setError} />} />
-          <Route path="/login" element={<Login error={error} setError={setError} />} />
-          <Route path="/signup" element={<Signup />} />
+        <AuthContext.Provider
+          value={{ auth, setAuthState: handleLogin, clearAuthState }}
+        >
+          <Router>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Login
+                    error={error}
+                    setError={setError}
+                    onLogin={handleLogin}
+                  />
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <Login
+                    error={error}
+                    setError={setError}
+                    onLogin={handleLogin}
+                  />
+                }
+              />
 
+              <Route
+                path="/shipments"
+                element={
+                  requireAuth(
+                    <MainLayout>
+                      <Shipments toggleTheme={toggleTheme} mode={mode} />
+                    </MainLayout>
+                  )
+                }
+              />
+              <Route
+                path="/news"
+                element={
+                  requireAuth(
+                    <MainLayout>
+                      <News toggleTheme={toggleTheme} mode={mode} />
+                    </MainLayout>
+                  )
+                }
+              />
+              <Route
+                path="/report"
+                element={
+                  requireAuth(
+                    <MainLayout>
+                      <Report toggleTheme={toggleTheme} mode={mode} />
+                    </MainLayout>
+                  )
+                }
+              />
 
-          <Route
-            path="/shipments"
-            element={
-              <MainLayout>
-                <Shipments toggleTheme={toggleTheme} mode={mode} />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/news"
-            element={
-              <MainLayout>
-                <News toggleTheme={toggleTheme} mode={mode} />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/report"
-            element={
-              <MainLayout>
-                <Report toggleTheme={toggleTheme} mode={mode} />
-              </MainLayout>
-            }
-          />
-
-          <Route
-            path="/users"
-            element={
-              <MainLayout>
-                <Users />
-              </MainLayout>
-            }
-          />
-
-        </Routes>
-        </Router>
+              <Route
+                path="/users"
+                element={
+                  requireAdmin(
+                    <MainLayout>
+                      <Users />
+                    </MainLayout>
+                  )
+                }
+              />
+            </Routes>
+          </Router>
+        </AuthContext.Provider>
       </div>
     </ThemeProvider>
   );
